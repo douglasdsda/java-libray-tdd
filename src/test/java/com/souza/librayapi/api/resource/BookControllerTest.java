@@ -3,7 +3,8 @@ package com.souza.librayapi.api.resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.souza.librayapi.api.dto.BookDTO;
 import com.souza.librayapi.api.model.Book.Book;
-import com.souza.librayapi.service.BookService;
+import com.souza.librayapi.api.service.BookService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,10 +19,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.awt.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -54,17 +57,27 @@ public class BookControllerTest {
 
         mvc
         .perform(request)
-        .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(10l))
-        .andExpect(MockMvcResultMatchers.jsonPath("title").value(dto.getTitle()))
-        .andExpect(MockMvcResultMatchers.jsonPath("author").value(dto.getAuthor()))
-        .andExpect(MockMvcResultMatchers.jsonPath("isbn").value(dto.getIsbn()))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("id").value(10l))
+        .andExpect(jsonPath("title").value(dto.getTitle()))
+        .andExpect(jsonPath("author").value(dto.getAuthor()))
+        .andExpect(jsonPath("isbn").value(dto.getIsbn()))
         ;
     }
 
     @Test
     @DisplayName("Deve lancar erro de validação, quando não houver dados sucicientes para criacao do livro.")
-    public void createInvalidBookTest(){
+    public void createInvalidBookTest() throws Exception{
+        String json = new ObjectMapper().writeValueAsString(new BookDTO());
 
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(BOOK_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", Matchers.hasSize(3)));
     }
 }
