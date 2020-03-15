@@ -35,7 +35,6 @@ public class BookServiceTest {
         Book book = Book.builder().isbn("123").author("Fulano").title("As aventuras.").build();
         Mockito.when(repository.save(book)).thenReturn(Book.builder().id(1l).isbn("123").author("Fulano").title("As aventuras.").build());
 
-
         //execucao
         Book saveBook = service.save(book);
 
