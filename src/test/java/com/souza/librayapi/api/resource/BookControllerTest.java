@@ -5,6 +5,7 @@ import com.souza.librayapi.api.dto.BookDTO;
 import com.souza.librayapi.api.exception.BusinessException;
 import com.souza.librayapi.api.model.Book.Book;
 import com.souza.librayapi.api.service.BookService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,7 +47,7 @@ public class BookControllerTest {
     @DisplayName("Deve criar um livro com Sucesso.")
     public void createBookTest() throws Exception {
         BookDTO dto = createNewBook();
-        Book savedBook = Book.builder().id(10l).author("Arthur").title("As Aventuras").isbn("001").build();
+        Book savedBook = creadBook();
         BDDMockito.given(service.save(Mockito.any(Book.class))).willReturn(savedBook);
 
         String json = new ObjectMapper().writeValueAsString(dto);
@@ -64,10 +66,6 @@ public class BookControllerTest {
         .andExpect(jsonPath("author").value(dto.getAuthor()))
         .andExpect(jsonPath("isbn").value(dto.getIsbn()))
         ;
-    }
-
-    private BookDTO createNewBook() {
-        return BookDTO.builder().author("Arthur").title("As Aventuras").isbn("001").build();
     }
 
     @Test
@@ -105,4 +103,13 @@ public class BookControllerTest {
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0]").value(mensagemErro));
     }
+
+    private BookDTO createNewBook() {
+        return BookDTO.builder().author("Arthur").title("As Aventuras").isbn("001").build();
+    }
+
+    private Book creadBook() {
+        return Book.builder().id(10l).author("Arthur").title("As Aventuras").isbn("001").build();
+    }
+
 }
