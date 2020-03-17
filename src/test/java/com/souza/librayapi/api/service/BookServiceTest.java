@@ -31,7 +31,7 @@ public class BookServiceTest {
     }
 
     @Test
-    @DisplayName("Deve salvar um livro")
+    @DisplayName("Deve salvar um livro s")
     public void saveBookTest(){
         // cenario
         Book book = savedBook();
