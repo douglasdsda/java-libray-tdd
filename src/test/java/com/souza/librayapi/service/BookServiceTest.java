@@ -1,9 +1,9 @@
-package com.souza.librayapi.api.service;
+package com.souza.librayapi.service;
 
 import com.souza.librayapi.api.exception.BusinessException;
 import com.souza.librayapi.api.model.Book.Book;
 import com.souza.librayapi.api.model.repository.BookRepository;
-import com.souza.librayapi.api.service.impl.BookServiceImpl;
+import com.souza.librayapi.service.impl.BookServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

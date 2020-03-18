@@ -4,7 +4,7 @@ import com.souza.librayapi.api.dto.BookDTO;
 import com.souza.librayapi.api.exception.ApiErrors;
 import com.souza.librayapi.api.exception.BusinessException;
 import com.souza.librayapi.api.model.Book.Book;
-import com.souza.librayapi.api.service.BookService;
+import com.souza.librayapi.service.BookService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;

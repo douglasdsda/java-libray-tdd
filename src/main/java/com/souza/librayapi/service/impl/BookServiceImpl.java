@@ -1,4 +1,4 @@
-package com.souza.librayapi.api.service.impl;
+package com.souza.librayapi.service.impl;
 
 import com.souza.librayapi.api.exception.BusinessException;
 import com.souza.librayapi.api.model.Book.Book;
@@ -6,7 +6,7 @@ import com.souza.librayapi.api.model.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BookServiceImpl implements com.souza.librayapi.api.service.BookService {
+public class BookServiceImpl implements com.souza.librayapi.service.BookService {
 
     private BookRepository repository;
 
