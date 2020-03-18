@@ -26,16 +26,16 @@ public class BookServiceTest {
     BookRepository repository;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         this.service = new BookServiceImpl(repository);
     }
 
     @Test
     @DisplayName("Deve salvar um livro s")
-    public void saveBookTest(){
+    public void saveBookTest() {
         // cenario
         Book book = savedBook();
-        Mockito.when( repository.existsByIsbn(Mockito.anyString())).thenReturn(false);
+        Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(false);
         Mockito.when(repository.save(book)).thenReturn(Book.builder().id(1l).isbn("123").author("Fulano").title("As aventuras.").build());
 
         //execucao
@@ -54,12 +54,12 @@ public class BookServiceTest {
 
     @Test
     @DisplayName("Deve lancar erro de negocio ao tentar salvar um livro com isbn duplicado")
-    public void shouldNotSaveABookWithDuplicatedISbN(){
+    public void shouldNotSaveABookWithDuplicatedISbN() {
         // cenario
         Book book = savedBook();
-        Mockito.when( repository.existsByIsbn(Mockito.anyString())).thenReturn(true);
+        Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(true);
         // execucao
-        Throwable exception = Assertions.catchThrowable( () -> service.save(book));
+        Throwable exception = Assertions.catchThrowable(() -> service.save(book));
 
         // verificacao
         assertThat(exception)
@@ -67,8 +67,6 @@ public class BookServiceTest {
                 .hasMessage("Isbn já cadastrado.")
         ;
         Mockito.verify(repository, Mockito.never()).save(book);
-
-
 
     }
 

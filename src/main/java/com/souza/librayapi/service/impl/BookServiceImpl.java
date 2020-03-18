@@ -5,6 +5,8 @@ import com.souza.librayapi.api.model.Book.Book;
 import com.souza.librayapi.api.model.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class BookServiceImpl implements com.souza.librayapi.service.BookService {
 
@@ -21,5 +23,15 @@ public class BookServiceImpl implements com.souza.librayapi.service.BookService 
             throw new BusinessException(("Isbn já cadastrado."));
         }
         return repository.save(book);
+    }
+
+    @Override
+    public Optional<Book> getById(Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
     }
 }
