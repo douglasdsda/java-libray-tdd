@@ -34,4 +34,9 @@ public class BookServiceImpl implements com.souza.librayapi.service.BookService 
     public void deleteById(Long id) {
 
     }
+
+    @Override
+    public Book update(Book book) {
+        return null;
+    }
 }
