@@ -58,7 +58,7 @@ public class BookController {
                  .getById(id)
                  .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-         service.deleteById(id);
+         service.delete(book);
     }
 
     @PutMapping("{id}")

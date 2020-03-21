@@ -16,7 +16,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -37,8 +40,8 @@ public class BookServiceTest {
     public void saveBookTest() {
         // cenario
         Book book = savedBook();
-        Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(false);
-        Mockito.when(repository.save(book)).thenReturn(Book.builder().id(1l).isbn("123").author("Fulano").title("As aventuras.").build());
+        when(repository.existsByIsbn(Mockito.anyString())).thenReturn(false);
+        when(repository.save(book)).thenReturn(Book.builder().id(1l).isbn("123").author("Fulano").title("As aventuras.").build());
 
         //execucao
         Book saveBook = service.save(book);
@@ -59,7 +62,7 @@ public class BookServiceTest {
     public void shouldNotSaveABookWithDuplicatedISbN() {
         // cenario
         Book book = savedBook();
-        Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(true);
+        when(repository.existsByIsbn(Mockito.anyString())).thenReturn(true);
         // execucao
         Throwable exception = Assertions.catchThrowable(() -> service.save(book));
 
@@ -79,7 +82,7 @@ public class BookServiceTest {
         Long id = 1l;
         Book book = savedBook();
         book.setId(id);
-        Mockito.when(repository.findById(id)).thenReturn(Optional.of(book));
+        when(repository.findById(id)).thenReturn(Optional.of(book));
 
         //execucao
         Optional<Book> foundBook = service.getById(id);
@@ -96,7 +99,7 @@ public class BookServiceTest {
         // cenario
         Long id = 1l;
 
-        Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
+        when(repository.findById(id)).thenReturn(Optional.empty());
 
         //execucao
         Optional<Book> foundBook = service.getById(id);
@@ -104,5 +107,82 @@ public class BookServiceTest {
         assertThat(foundBook.isPresent()).isFalse();
 
     }
+
+    @Test
+    @DisplayName("Deve verificar delete se deletou")
+    public void deleteBookTest(){
+        // cenario
+        Long id = 1l;
+        Book book = Book.builder().id(id).isbn("123").author("Fulano").title("As aventuras.").build();
+
+        //execucao
+        org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> service.delete(book));
+
+        //verificao
+        Mockito.verify(repository, Mockito.times(1)).delete(book);
+
+    }
+
+    @Test
+    @DisplayName("Deve verificar delete nao deletou")
+    public void deleteNotBookTest(){
+        // cenario
+        Book book = new Book();
+        //execucao
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> service.delete(book));
+
+        //verificao
+        Mockito.verify(repository, Mockito.never()).delete(book);
+    }
+
+    @Test
+    @DisplayName("Deve ocorrer erro ao tentar deletar um livro inexistente.")
+    public void deleteInvalidBookTest(){
+        Book book = new Book();
+
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> service.delete(book));
+
+        Mockito.verify( repository, Mockito.never() ).delete(book);
+    }
+
+    @Test
+    @DisplayName("Deve nao update ")
+    public void notUpdateBook(){
+        // cenario
+        Long id = 1l;
+        Book book = new Book();
+        Book atual = Book.builder().id(id).isbn("123").author("Fulano").title("As aventuras.").build();
+
+        //execucao
+        org.junit.jupiter.api.Assertions.assertThrows( IllegalArgumentException.class , () -> service.update(book));
+
+        //verificao
+        Mockito.verify(repository, Mockito.never()).save(book);
+
+    }
+
+    @Test
+    @DisplayName("Deve update ")
+    public void updatebookTest(){
+        // cenario
+        Long id = 1l;
+
+        Book updatingBook = Book.builder().id(id).build();
+
+        Book updatedBook = savedBook();
+        updatedBook.setId(id);
+        when(repository.save(updatingBook)).thenReturn(updatedBook);
+
+        //execucao
+        Book book = service.update(updatingBook);
+
+        //verificao
+        assertThat(book.getId()).isEqualTo(updatedBook.getId());
+        assertThat(book.getTitle()).isEqualTo(updatedBook.getTitle());
+        assertThat(book.getIsbn()).isEqualTo(updatedBook.getIsbn());
+        assertThat(book.getAuthor()).isEqualTo(updatedBook.getAuthor());
+
+    }
+
 
 }
