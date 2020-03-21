@@ -3,7 +3,9 @@ package com.souza.librayapi.service.impl;
 import com.souza.librayapi.api.exception.BusinessException;
 import com.souza.librayapi.api.model.Book.Book;
 import com.souza.librayapi.api.model.repository.BookRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -27,7 +29,9 @@ public class BookServiceImpl implements com.souza.librayapi.service.BookService 
 
     @Override
     public Optional<Book> getById(Long id) {
-        return Optional.empty();
+
+
+        return repository.findById(id);
     }
 
     @Override
