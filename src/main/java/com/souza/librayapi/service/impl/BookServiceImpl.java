@@ -3,6 +3,10 @@ package com.souza.librayapi.service.impl;
 import com.souza.librayapi.api.exception.BusinessException;
 import com.souza.librayapi.api.model.Book.Book;
 import com.souza.librayapi.api.model.repository.BookRepository;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,5 +52,16 @@ public class BookServiceImpl implements com.souza.librayapi.service.BookService 
             throw new IllegalArgumentException("Book id cant be null.");
         }
         return this.repository.save(book);
+    }
+
+    @Override
+    public Page<Book> find(Book filter, Pageable pageRequest) {
+        Example<Book> example = Example.of(filter, ExampleMatcher
+                .matching()
+                .withIgnoreCase()
+                .withIgnoreNullValues()
+                .withStringMatcher( ExampleMatcher.StringMatcher.CONTAINING)
+                );
+        return repository.findAll(example, pageRequest);
     }
 }
