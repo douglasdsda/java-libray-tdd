@@ -1,4 +1,4 @@
-package com.souza.librayapi.api.model.Book;
+package com.souza.librayapi.api.model.entity;
 
 import lombok.*;
 

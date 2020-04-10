@@ -1,7 +1,7 @@
-package com.souza.librayapi.service;
+package com.souza.librayapi.api.service;
 
 
-import com.souza.librayapi.api.model.Book.Book;
+import com.souza.librayapi.api.model.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,4 +19,6 @@ public interface BookService {
     Book update(Book book);
 
     Page<Book> find( Book filter, Pageable pageRequest);
+
+    Optional<Book> getBookByIsbn(String isbn);
 }

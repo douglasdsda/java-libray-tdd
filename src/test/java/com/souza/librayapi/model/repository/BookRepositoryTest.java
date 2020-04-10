@@ -1,6 +1,6 @@
 package com.souza.librayapi.model.repository;
 
-import com.souza.librayapi.api.model.Book.Book;
+import com.souza.librayapi.api.model.entity.Book;
 import com.souza.librayapi.api.model.repository.BookRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import javax.swing.text.html.Option;
 
 import java.util.Optional;
 
