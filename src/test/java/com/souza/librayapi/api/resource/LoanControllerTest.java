@@ -1,7 +1,9 @@
 package com.souza.librayapi.api.resource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.souza.librayapi.api.dto.LoanDto;
+import com.souza.librayapi.api.dto.ReturnedLoanDTO;
 import com.souza.librayapi.api.exception.BusinessException;
 import com.souza.librayapi.api.model.entity.Book;
 import com.souza.librayapi.api.model.entity.Loan;
@@ -27,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -119,6 +122,28 @@ public class LoanControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect( jsonPath("errors", Matchers.hasSize(1)))
                 .andExpect( jsonPath("errors[0]").value("Book alredy loaned"));
+
+    }
+
+    @Test
+    @DisplayName("Deve retornar 404 quando tentar devolver um livro inexistente")
+    public void returnedBookTest() throws Exception {
+        // cenario
+        ReturnedLoanDTO dto = ReturnedLoanDTO.builder().returned(true).build();
+
+
+        BDDMockito.given(loanService.getById(Mockito.anyLong()))
+                .willReturn(Optional.empty());
+
+
+        String json = new ObjectMapper().writeValueAsString(dto);
+        mockMvc.perform(
+                patch(LOAN_API.concat("/1"))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                ).andExpect(status().isNotFound());
+
 
     }
 }
