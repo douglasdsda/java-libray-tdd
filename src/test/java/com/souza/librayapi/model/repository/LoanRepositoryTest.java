@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,5 +65,47 @@ public class LoanRepositoryTest {
        assertThat(result.getPageable().getPageSize()).isEqualTo(10);
        assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
        assertThat(result.getTotalElements()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Deve obter emprestimo cuja data emprestimo for menor ou igual a tres dias atras e nao retornados")
+    public void findByLoanDateLessThanAndNotReturnedTest(){
+        // cenario
+        Book book = Book.builder().author("Fulano").title("Title").author("Author").isbn("123").build();
+
+        entityManager.persist(book);
+
+        Loan loan = Loan.builder().book(book).customer("Custumer").loanDate(LocalDate.now().minusDays(5)).build();
+       Loan loanSaved =  entityManager.persist(loan);
+
+     List<Loan> result =  repository.findByLoanDateLessThanNotReturned(LocalDate.now().minusDays(4));
+    assertThat(result).hasSize(1).contains(loanSaved);
+    }
+
+    @Test
+    @DisplayName("Deve retornar vazio quando nao houver emprestimos atrasados.")
+    public void noTfindByLoanDateLessThanAndNotReturnedTest(){
+        // cenario
+        Book book = Book.builder().author("Fulano").title("Title").author("Author").isbn("123").build();
+
+        entityManager.persist(book);
+
+        Loan loan = Loan.builder().book(book).customer("Custumer").loanDate(LocalDate.now()).build();
+        Loan loanSaved =  entityManager.persist(loan);
+
+        List<Loan> result =  repository.findByLoanDateLessThanNotReturned(LocalDate.now().minusDays(4));
+        assertThat(result).isEmpty();
+    }
+
+    public Loan getLoan(Long id){
+        Book book = Book.builder().id(1l).isbn("001").author("Author").title("Title").build();
+        String custumer = "Fulano";
+        return Loan.builder()
+                .book(book)
+                .id(id)
+                .customer("Fulano")
+                .loanDate(LocalDate.now())
+                .build();
+
     }
 }

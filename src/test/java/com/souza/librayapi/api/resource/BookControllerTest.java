@@ -5,6 +5,8 @@ import com.souza.librayapi.api.dto.BookDTO;
 import com.souza.librayapi.api.exception.BusinessException;
 import com.souza.librayapi.api.model.entity.Book;
 import com.souza.librayapi.api.service.BookService;
+import com.souza.librayapi.api.service.LoanService;
+import lombok.NoArgsConstructor;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(controllers = BookController.class)
 @AutoConfigureMockMvc
+
 public class BookControllerTest {
 
     static String BOOK_API = "/api/books";
@@ -49,6 +52,9 @@ public class BookControllerTest {
 
     @MockBean
     BookService service;
+
+    @MockBean
+    LoanService loanService;
 
     @Test
     @DisplayName("Deve criar um livro com Sucesso.")
