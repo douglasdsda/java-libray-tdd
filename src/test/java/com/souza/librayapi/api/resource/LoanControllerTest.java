@@ -3,6 +3,7 @@ package com.souza.librayapi.api.resource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.souza.librayapi.api.dto.LoanDto;
+import com.souza.librayapi.api.dto.LoanFilterDTO;
 import com.souza.librayapi.api.dto.ReturnedLoanDTO;
 import com.souza.librayapi.api.exception.BusinessException;
 import com.souza.librayapi.api.model.entity.Book;
@@ -19,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -27,6 +31,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -144,6 +149,40 @@ public class LoanControllerTest {
                 .content(json)
                 ).andExpect(status().isNotFound());
 
+
+    }
+
+    @Test
+    @DisplayName("Deve filtrar um emprestimo")
+    public void findLoanTest() throws Exception {
+        Long id =  1l;
+
+        Loan loan = getLoan(id);
+        BDDMockito.given( loanService.find(Mockito.any(LoanFilterDTO.class), Mockito.any(Pageable.class)))
+                .willReturn( new PageImpl<Loan>(Arrays.asList(loan), PageRequest.of(0,100), 1));
+
+        String queryString = String.format("?isbn=%s&custumer=%s&page=0&size=100",
+                loan.getBook().getIsbn(),loan.getCustomer());
+        MockHttpServletRequestBuilder request  = MockMvcRequestBuilders.get(LOAN_API.concat(queryString))
+                .accept(MediaType.APPLICATION_JSON);
+        mockMvc
+                .perform( request)
+                .andExpect(status().isOk())
+                .andExpect( jsonPath("content", Matchers.hasSize(1)))
+                .andExpect( jsonPath("totalElements").value(1))
+                .andExpect(jsonPath("pageable.pageSize").value(100))
+                .andExpect(jsonPath("pageable.pageNumber").value(0));
+    }
+
+    public Loan getLoan(Long id){
+        Book book = Book.builder().id(1l).isbn("001").author("Author").title("Title").build();
+        String custumer = "Fulano";
+        return Loan.builder()
+                .book(book)
+                .id(id)
+                .customer("Fulano")
+                .loanDate(LocalDate.now())
+                .build();
 
     }
 }

@@ -1,8 +1,11 @@
 package com.souza.librayapi.api.service;
 
+import com.souza.librayapi.api.dto.LoanFilterDTO;
 import com.souza.librayapi.api.model.entity.Book;
 import com.souza.librayapi.api.model.entity.Loan;
 import com.souza.librayapi.api.resource.BookController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -12,4 +15,6 @@ public interface LoanService {
     Optional<Loan> getById(Long id);
 
     Loan update(Loan loan);
+
+    Page<Loan> find(LoanFilterDTO filter, Pageable pageable);
 }
