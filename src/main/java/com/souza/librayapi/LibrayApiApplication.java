@@ -29,7 +29,7 @@ public class LibrayApiApplication {
 	@Bean
 	public CommandLineRunner runner(){
 		return args -> {
-			List<String> emails = Arrays.asList("libray-api-0106da@inbox.mailtrap.io");
+			List<String> emails = Arrays.asList("douglasdsda@gmail.com");
 			emailService.sendMails("Testando servico de email", emails);
 			System.out.println("EMAIL ENVIADO");
 		};

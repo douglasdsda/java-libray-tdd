@@ -8,6 +8,10 @@ import com.souza.librayapi.api.model.entity.Book;
 import com.souza.librayapi.api.model.entity.Loan;
 import com.souza.librayapi.api.service.BookService;
 import com.souza.librayapi.api.service.LoanService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
+@Api("Book API")
 public class BookController {
 
 
@@ -45,6 +50,7 @@ public class BookController {
     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation("CREATE A BOOK")
     public BookDTO create(@RequestBody @Valid BookDTO dto) {
         Book entity = modelMapper.map(dto, Book.class);
         //  Book.builder()
@@ -67,6 +73,9 @@ public class BookController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Book succesfully deleted")
+    })
     public void delete(@PathVariable Long id) {
 
          Book book = service
