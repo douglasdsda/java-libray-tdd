@@ -1,0 +1,14 @@
+heroku: 
+
+heroku login
+
+heroku create nome da aplicao
+
+git push heroku master
+
+
+mvnw clean package
+
+
+gerar jar
+java -jar libray-api-0.0.1-SNAPSHOT.jar
