@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,8 +16,8 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableScheduling
-public class LibrayApiApplication {
-
+public class LibrayApiApplication extends SpringBootServletInitializer {
+// extends SpringBootServletInitializer  se for usar war
 	@Bean
 	public ModelMapper modelMapper(){
 		return new ModelMapper();
